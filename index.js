@@ -114,8 +114,12 @@ function process(file) {
     }
 
     function compile() {
-        this.queue(transform(data));
-        this.queue(null);
+        try {
+            this.queue(transform(data));
+            this.queue(null);
+        } catch (e) {
+            this.emit("error", e);
+        }
     }
 
     return through(write, compile);
