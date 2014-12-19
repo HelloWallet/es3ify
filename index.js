@@ -1,6 +1,7 @@
 var Syntax = require('esprima-fb').Syntax;
 var jstransform = require('jstransform');
 var through = require('through');
+var path = require('path');
 var utils = require('jstransform/src/utils');
 
 var reserved = [
@@ -122,7 +123,15 @@ function process(file) {
         }
     }
 
-    return through(write, compile);
+    function skip(chunk) {
+        this.queue(chunk);
+    }
+
+    if (path.extname(file) === ".js") {
+        return through(write, compile);
+    } else {
+        return through();
+    }
 }
 
 module.exports = process;
